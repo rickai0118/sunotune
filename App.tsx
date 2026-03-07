@@ -364,9 +364,17 @@ const App: React.FC = () => {
             <span className="text-sm leading-none">{themeIcon}</span>
             <span className="hidden sm:inline uppercase">{themeLabel}</span>
           </button>
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700 flex items-center justify-center shadow-lg">
-            <span className="text-xs font-bold text-zinc-400">U</span>
-          </div>
+          <button
+            onClick={() => {
+              localStorage.removeItem('gemini_api_key');
+              setApiKey('');
+              setHasValidKey(false);
+            }}
+            className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700 flex items-center justify-center shadow-lg hover:border-amber-500/50 hover:text-amber-400 transition-colors cursor-pointer"
+            title={language === 'en' ? 'Reset API Key' : '重置 API Key'}
+          >
+            <span className="text-xs font-bold text-zinc-400">🔑</span>
+          </button>
         </div>
       </header>
 
