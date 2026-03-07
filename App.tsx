@@ -191,11 +191,6 @@ const App: React.FC = () => {
     });
   };
 
-  const themeIcon = theme === 'dark' ? '🌙' : theme === 'eye-care' ? '🌿' : '☀️';
-  const themeLabel = (t as any)[
-    theme === 'dark' ? 'themeDark' : theme === 'eye-care' ? 'themeEyeCare' : 'themeIvory'
-  ] || theme;
-
   const adjustScale = (delta: number) => {
     setUiScale(prev => Math.min(Math.max(prev + delta, 80), 120));
   };
@@ -211,6 +206,10 @@ const App: React.FC = () => {
   };
 
   const t = getTranslation(language);
+  const themeIcon = theme === 'dark' ? '🌙' : theme === 'eye-care' ? '🌿' : '☀️';
+  const themeLabel = (t as any)[
+    theme === 'dark' ? 'themeDark' : theme === 'eye-care' ? 'themeEyeCare' : 'themeIvory'
+  ] || theme;
 
   // --- Auth Screen ---
   if (!hasValidKey) {
