@@ -9,6 +9,7 @@ import RemixStudio from './components/RemixStudio';
 import HistoryDrawer from './components/HistoryDrawer';
 import { Mic, Type, Upload, AlertCircle, Loader2, Music4, Globe, Sparkles, Command, Monitor, Minus, Plus, Library, Eye, EyeOff, Save, Link2, Palette } from 'lucide-react';
 import { getTranslation } from './utils/translations';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 const App: React.FC = () => {
   const [apiKey, setApiKey] = useState<string>('');
@@ -552,6 +553,7 @@ const App: React.FC = () => {
         </div>
 
       </main>
+      <SpeedInsights />
     </div>
   );
 };
