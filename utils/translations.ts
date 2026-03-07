@@ -5,7 +5,7 @@ export const translations = {
   en: {
     appTitle: "Suno Architect",
     appSubtitle: "V5 Engine",
-    poweredBy: "Powered by Gemini 2.5 Flash",
+    poweredBy: "Powered by Gemini 3 Flash",
     enterKey: "Enter Studio",
     keyPlaceholder: "Paste Gemini API Key here...",
     keyInstruction: "Enter your Google Gemini API Key to access the Suno V5 reverse engineering tools.",
@@ -32,20 +32,24 @@ export const translations = {
     invalidFile: "Please upload a valid audio file.",
     noFile: "Please select an audio file first.",
     noText: "Please enter a description or lyrics.",
+    urlAnalysis: "URL Analysis",
+    urlPlaceholder: "Paste a YouTube or SoundCloud link here...",
+    noUrl: "Please enter a valid music URL.",
+    urlHint: "✓ YouTube · SoundCloud · Direct Audio URL — ✗ Spotify · Apple Music",
     genericError: "Something went wrong. Please try again.",
     // Audio Player
     readyToAnalyze: "Media Loaded",
     visualizer: "VISUALIZER",
     visModes: {
-        nebula: "Nebula Core",
-        grid: "Cyber Grid",
-        tunnel: "Spectrum Tunnel",
-        matrix: "Digital Rain",
-        mist: "Mist & Circuit",
-        retro: "Retro Sun",
-        scope: "Oscilloscope",
-        hex: "Hex Sphere",
-        fire: "Inferno"
+      nebula: "Nebula Core",
+      grid: "Cyber Grid",
+      tunnel: "Spectrum Tunnel",
+      matrix: "Digital Rain",
+      mist: "Mist & Circuit",
+      retro: "Retro Sun",
+      scope: "Oscilloscope",
+      hex: "Hex Sphere",
+      fire: "Inferno"
     },
     // Result Card
     analysisReport: "Analysis Console",
@@ -100,12 +104,12 @@ export const translations = {
     mixingConsole: "MIXING",
     applyVibe: "UPDATE VIBE",
     moods: {
-        red: "Aggressive",
-        blue: "Melancholic",
-        green: "Organic",
-        purple: "Dreamy",
-        yellow: "Upbeat",
-        zinc: "Dark/Industrial"
+      red: "Aggressive",
+      blue: "Melancholic",
+      green: "Organic",
+      purple: "Dreamy",
+      yellow: "Upbeat",
+      zinc: "Dark/Industrial"
     },
     // Library
     libraryTitle: "PROJECT LIBRARY",
@@ -115,11 +119,15 @@ export const translations = {
     exportProject: "EXPORT .TXT",
     emptyLibrary: "No projects saved yet.",
     autoSaved: "Project auto-saved to Library",
+    // Themes
+    themeDark: "Dark",
+    themeEyeCare: "Eye Care",
+    themeIvory: "Ivory",
   },
   zh: {
     appTitle: "Suno 架构师",
     appSubtitle: "V5 引擎",
-    poweredBy: "由 Gemini 2.5 Flash 驱动",
+    poweredBy: "由 Gemini 3 Flash 驱动",
     enterKey: "进入工作室",
     keyPlaceholder: "在此粘贴 Gemini API Key...",
     keyInstruction: "输入您的 Google Gemini API Key 以访问 Suno V5 逆向工程工具。",
@@ -146,20 +154,24 @@ export const translations = {
     invalidFile: "请上传有效的音频文件。",
     noFile: "请先选择一个音频文件。",
     noText: "请输入描述或歌词。",
+    urlAnalysis: "链接分析",
+    urlPlaceholder: "粘贴 YouTube 或 SoundCloud 链接...",
+    noUrl: "请输入有效的音乐链接。",
+    urlHint: "✓ YouTube · SoundCloud · 直链音频 — ✗ Spotify · Apple Music",
     genericError: "出错了，请重试。",
     // Audio Player
     readyToAnalyze: "媒体已加载",
     visualizer: "可视化引擎",
     visModes: {
-        nebula: "星云核心 (Nebula)",
-        grid: "赛博网格 (Grid)",
-        tunnel: "频谱隧道 (Tunnel)",
-        matrix: "数字矩阵 (Matrix)",
-        mist: "迷雾电导 (Mist)",
-        retro: "复古夕阳 (Retro Sun)",
-        scope: "示波器 (Oscilloscope)",
-        hex: "六角力场 (Hex Sphere)",
-        fire: "地狱烈焰 (Inferno)"
+      nebula: "星云核心 (Nebula)",
+      grid: "赛博网格 (Grid)",
+      tunnel: "频谱隧道 (Tunnel)",
+      matrix: "数字矩阵 (Matrix)",
+      mist: "迷雾电导 (Mist)",
+      retro: "复古夕阳 (Retro Sun)",
+      scope: "示波器 (Oscilloscope)",
+      hex: "六角力场 (Hex Sphere)",
+      fire: "地狱烈焰 (Inferno)"
     },
     // Result Card
     analysisReport: "分析控制台",
@@ -214,12 +226,12 @@ export const translations = {
     mixingConsole: "混音 (MIXING)",
     applyVibe: "更新氛围",
     moods: {
-        red: "激昂/热烈",
-        blue: "忧郁/宽广",
-        green: "自然/有机",
-        purple: "梦幻/Synth",
-        yellow: "欢快/明亮",
-        zinc: "黑暗/工业"
+      red: "激昂/热烈",
+      blue: "忧郁/宽广",
+      green: "自然/有机",
+      purple: "梦幻/Synth",
+      yellow: "欢快/明亮",
+      zinc: "黑暗/工业"
     },
     // Library
     libraryTitle: "工程库 (Library)",
@@ -229,6 +241,10 @@ export const translations = {
     exportProject: "导出文档 (.TXT)",
     emptyLibrary: "暂无保存的项目。",
     autoSaved: "项目已自动保存到工程库",
+    // Themes
+    themeDark: "暗黑",
+    themeEyeCare: "护眼",
+    themeIvory: "象牙白",
   }
 };
 

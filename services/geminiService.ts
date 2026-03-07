@@ -82,10 +82,10 @@ const RESPONSE_SCHEMA = {
         advancedSettings: {
           type: Type.OBJECT,
           properties: {
-             lyricsMode: { type: Type.STRING, enum: ["Manual", "Auto"], description: "Manual if lyrics provided, Auto otherwise" },
-             vocalGender: { type: Type.STRING, enum: ["Male", "Female", "Both"], description: "Suggested vocal gender" },
-             weirdness: { type: Type.INTEGER, description: "Suggested Weirdness percentage (0-100)" },
-             styleInfluence: { type: Type.INTEGER, description: "Suggested Style Influence percentage (0-100)" },
+            lyricsMode: { type: Type.STRING, enum: ["Manual", "Auto"], description: "Manual if lyrics provided, Auto otherwise" },
+            vocalGender: { type: Type.STRING, enum: ["Male", "Female", "Both"], description: "Suggested vocal gender" },
+            weirdness: { type: Type.INTEGER, description: "Suggested Weirdness percentage (0-100)" },
+            styleInfluence: { type: Type.INTEGER, description: "Suggested Style Influence percentage (0-100)" },
           },
           required: ["lyricsMode", "vocalGender", "weirdness", "styleInfluence"],
         },
@@ -105,10 +105,10 @@ const RESPONSE_SCHEMA = {
           advancedSettings: {
             type: Type.OBJECT,
             properties: {
-               lyricsMode: { type: Type.STRING, enum: ["Manual", "Auto"] },
-               vocalGender: { type: Type.STRING, enum: ["Male", "Female", "Both"] },
-               weirdness: { type: Type.INTEGER },
-               styleInfluence: { type: Type.INTEGER },
+              lyricsMode: { type: Type.STRING, enum: ["Manual", "Auto"] },
+              vocalGender: { type: Type.STRING, enum: ["Male", "Female", "Both"] },
+              weirdness: { type: Type.INTEGER },
+              styleInfluence: { type: Type.INTEGER },
             },
             required: ["lyricsMode", "vocalGender", "weirdness", "styleInfluence"],
           },
@@ -121,36 +121,64 @@ const RESPONSE_SCHEMA = {
 };
 
 const REFINE_SCHEMA = {
-    type: Type.OBJECT,
-    properties: {
-        title: { type: Type.STRING, description: "Updated creative title" },
-        styleDescription: { type: Type.STRING, description: "Updated Style Prompt adapted for language/genre" },
-        lyricsAndStructure: { type: Type.STRING, description: "Rewritten full lyrics with structure tags. Ensure proper rhyming in target language." },
-        advancedSettings: {
-            type: Type.OBJECT,
-            properties: {
-               lyricsMode: { type: Type.STRING, enum: ["Manual", "Auto"] },
-               vocalGender: { type: Type.STRING, enum: ["Male", "Female", "Both"] },
-               weirdness: { type: Type.INTEGER },
-               styleInfluence: { type: Type.INTEGER },
-            },
-            required: ["lyricsMode", "vocalGender", "weirdness", "styleInfluence"],
-          },
+  type: Type.OBJECT,
+  properties: {
+    title: { type: Type.STRING, description: "Updated creative title" },
+    styleDescription: { type: Type.STRING, description: "Updated Style Prompt adapted for language/genre" },
+    lyricsAndStructure: { type: Type.STRING, description: "Rewritten full lyrics with structure tags. Ensure proper rhyming in target language." },
+    advancedSettings: {
+      type: Type.OBJECT,
+      properties: {
+        lyricsMode: { type: Type.STRING, enum: ["Manual", "Auto"] },
+        vocalGender: { type: Type.STRING, enum: ["Male", "Female", "Both"] },
+        weirdness: { type: Type.INTEGER },
+        styleInfluence: { type: Type.INTEGER },
+      },
+      required: ["lyricsMode", "vocalGender", "weirdness", "styleInfluence"],
     },
-    required: ["title", "styleDescription", "lyricsAndStructure", "advancedSettings"]
+  },
+  required: ["title", "styleDescription", "lyricsAndStructure", "advancedSettings"]
 }
+
+// Unsupported URL patterns (paywalled / auth-required services)
+const BLOCKED_URL_PATTERNS = [
+  { pattern: /spotify\.com/i, name: 'Spotify' },
+  { pattern: /music\.apple\.com/i, name: 'Apple Music' },
+  { pattern: /tidal\.com/i, name: 'Tidal' },
+  { pattern: /deezer\.com/i, name: 'Deezer' },
+  { pattern: /music\.amazon/i, name: 'Amazon Music' },
+];
+
+const validateMusicUrl = (url: string): void => {
+  const blocked = BLOCKED_URL_PATTERNS.find(b => b.pattern.test(url));
+  if (blocked) {
+    throw new Error(
+      `${blocked.name} links are behind a paywall and cannot be analyzed directly. Please use YouTube, SoundCloud, or a direct audio file URL instead.`
+    );
+  }
+  try {
+    new URL(url);
+  } catch {
+    throw new Error('Invalid URL format. Please enter a valid URL.');
+  }
+};
 
 export const generateSunoPrompt = async (
   apiKey: string,
-  input: string | File,
+  input: string | File | { url: string },
   language: Language = 'en'
 ): Promise<SunoResult> => {
   if (!apiKey) throw new Error("API Key is required");
 
-  const ai = new GoogleGenAI({ apiKey });
-  const modelId = "gemini-2.5-flash"; 
+  // Validate URL before calling API
+  if (typeof input === 'object' && 'url' in input) {
+    validateMusicUrl(input.url);
+  }
 
-  const langInstruction = language === 'zh' 
+  const ai = new GoogleGenAI({ apiKey });
+  const modelId = "gemini-3-flash-preview";
+
+  const langInstruction = language === 'zh'
     ? "Output 'analysis' fields (genre, elements, key, chordProgression, instruments, vocalTexture, structure), 'variants.description', 'variants.structureChanges' and ALL 'title' fields in Simplified Chinese. 'masterPrompt.styleDescription' and 'variants.styleAdjustment' MUST remain in English. Lyrics tags keep English [Verse]. If generating new lyrics, write them in Chinese."
     : "Output all descriptions and analysis in English. If generating new lyrics, write them in English.";
 
@@ -166,6 +194,16 @@ export const generateSunoPrompt = async (
     });
     parts.push({
       text: `Analyze this audio file and generate a Suno V5 prompt structure. ${langInstruction}. IMPORTANT: You MUST generate/transcribe FULL LYRICS in the 'lyricsAndStructure' field. Do not leave it empty or just with tags.`
+    });
+  } else if (typeof input === 'object' && 'url' in input) {
+    // URL mode: use fileData with fileUri
+    parts.push({
+      fileData: {
+        fileUri: input.url,
+      },
+    });
+    parts.push({
+      text: `Analyze the audio from this URL and generate a Suno V5 prompt structure. ${langInstruction}. IMPORTANT: You MUST generate/transcribe FULL LYRICS in the 'lyricsAndStructure' field. Do not leave it empty or just with tags.`
     });
   } else {
     parts.push({
@@ -184,7 +222,7 @@ export const generateSunoPrompt = async (
         systemInstruction: SYSTEM_PROMPT,
         responseMimeType: "application/json",
         responseSchema: RESPONSE_SCHEMA,
-        temperature: 0.6, 
+        temperature: 0.6,
       },
     });
 
@@ -199,31 +237,31 @@ export const generateSunoPrompt = async (
 };
 
 export const refineSunoPrompt = async (
-    apiKey: string,
-    currentPrompt: MasterPrompt,
-    instruction: string,
-    taskType: RefineTask = 'general',
-    productionSettings?: ProductionSettings
+  apiKey: string,
+  currentPrompt: MasterPrompt,
+  instruction: string,
+  taskType: RefineTask = 'general',
+  productionSettings?: ProductionSettings
 ): Promise<RefineResult> => {
-    if (!apiKey) throw new Error("API Key is required");
+  if (!apiKey) throw new Error("API Key is required");
 
-    const ai = new GoogleGenAI({ apiKey });
-    const modelId = "gemini-2.5-flash"; 
+  const ai = new GoogleGenAI({ apiKey });
+  const modelId = "gemini-3-flash-preview";
 
-    let taskInstruction = "";
-    if (taskType === 'lyrics_polish') {
-        taskInstruction = "TASK: Polish the lyrics provided below. Fix flow, meter, and rhymes while keeping the original meaning. Ensure valid Suno structure tags.";
-    } else if (taskType === 'production_update') {
-        taskInstruction = `TASK: Update the vibe based on these production settings: 
+  let taskInstruction = "";
+  if (taskType === 'lyrics_polish') {
+    taskInstruction = "TASK: Polish the lyrics provided below. Fix flow, meter, and rhymes while keeping the original meaning. Ensure valid Suno structure tags.";
+  } else if (taskType === 'production_update') {
+    taskInstruction = `TASK: Update the vibe based on these production settings: 
         Mood Color: ${productionSettings?.moodColor || 'None'}
         Foley: ${productionSettings?.foley?.join(', ') || 'None'}
         Mixing: ${productionSettings?.mixing || 'None'}
         Interpret these settings into the Style Prompt and add relevant tags to lyrics.`;
-    } else {
-        taskInstruction = `TASK: Follow User Instruction: "${instruction}"`;
-    }
+  } else {
+    taskInstruction = `TASK: Follow User Instruction: "${instruction}"`;
+  }
 
-    const userPrompt = `
+  const userPrompt = `
     CURRENT PROMPT DATA:
     Title: ${currentPrompt.title}
     Style: ${currentPrompt.styleDescription}
@@ -235,29 +273,29 @@ export const refineSunoPrompt = async (
     Refine the data above.
     `;
 
-    try {
-        const response = await ai.models.generateContent({
-          model: modelId,
-          contents: {
-            role: "user",
-            parts: [{ text: userPrompt }],
-          },
-          config: {
-            systemInstruction: REFINE_SYSTEM_PROMPT,
-            responseMimeType: "application/json",
-            responseSchema: REFINE_SCHEMA,
-            temperature: 0.7, 
-          },
-        });
-    
-        const text = response.text;
-        if (!text) throw new Error("No response from AI");
-    
-        return JSON.parse(text) as RefineResult;
-      } catch (error) {
-        console.error("Gemini Refine API Error:", error);
-        throw error;
-      }
+  try {
+    const response = await ai.models.generateContent({
+      model: modelId,
+      contents: {
+        role: "user",
+        parts: [{ text: userPrompt }],
+      },
+      config: {
+        systemInstruction: REFINE_SYSTEM_PROMPT,
+        responseMimeType: "application/json",
+        responseSchema: REFINE_SCHEMA,
+        temperature: 0.7,
+      },
+    });
+
+    const text = response.text;
+    if (!text) throw new Error("No response from AI");
+
+    return JSON.parse(text) as RefineResult;
+  } catch (error) {
+    console.error("Gemini Refine API Error:", error);
+    throw error;
+  }
 }
 
 const fileToBase64 = (file: File): Promise<string> => {

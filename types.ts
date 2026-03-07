@@ -1,10 +1,12 @@
 
 export enum InputMode {
   AUDIO = 'AUDIO',
+  URL = 'URL',
   TEXT = 'TEXT'
 }
 
 export type Language = 'en' | 'zh';
+export type Theme = 'dark' | 'eye-care' | 'ivory';
 
 export interface AnalysisReport {
   genre: string;
@@ -76,13 +78,13 @@ export interface MessageState {
 export type RefineTask = 'general' | 'lyrics_polish' | 'production_update';
 
 export interface ProductionSettings {
-    moodColor?: string; // hex
-    foley?: string[]; // e.g. ['rain', 'vinyl']
-    mixing?: string; // e.g. 'hall'
+  moodColor?: string; // hex
+  foley?: string[]; // e.g. ['rain', 'vinyl']
+  mixing?: string; // e.g. 'hall'
 }
 
 export interface LyricsVersion {
-    content: string;
-    timestamp: number;
-    note?: string;
+  content: string;
+  timestamp: number;
+  note?: string;
 }
