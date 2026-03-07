@@ -318,7 +318,7 @@ const App: React.FC = () => {
             </div>
             <div>
               <h1 className="font-bold text-sm tracking-tight text-zinc-100 leading-none">{t.appTitle}</h1>
-              <span className="text-[10px] text-zinc-500 font-mono">v5.0.0_BUILD</span>
+              <span className="text-[10px] text-zinc-500 font-mono">v5.1.8_BUILD</span>
             </div>
           </div>
           <div className="h-6 w-px bg-zinc-800 mx-2 hidden sm:block"></div>
