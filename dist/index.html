@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suno Architect</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      font-size: 16px;
+      /* === DEFAULT: DARK THEME === */
+      --bg-app: #09090b;
+      --bg-surface: #0a0a0a;
+      --bg-card: #18181b;
+      --bg-input: rgba(24, 24, 27, 0.5);
+      --bg-toolbar: #09090b;
+      --bg-slot: #050505;
+      --bg-overlay: rgba(0, 0, 0, 0.4);
+      --border-default: #27272a;
+      --border-light: #3f3f46;
+      --border-focus: rgba(6, 182, 212, 0.5);
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-tertiary: #71717a;
+      --text-placeholder: #52525b;
+      --accent: #d97706;
+      --accent-hover: #f59e0b;
+      --accent-glow: rgba(217, 119, 6, 0.3);
+      --accent-shadow: rgb(146, 64, 14);
+      --cyan-accent: #22d3ee;
+      --cyan-dim: rgba(34, 211, 238, 0.5);
+      --scrollbar-track: #09090b;
+      --scrollbar-thumb: #3f3f46;
+      --scrollbar-hover: #52525b;
+      --grid-line: #27272a;
+      --slot-shadow: rgba(0, 0, 0, 0.6);
+      --error-bg: rgba(69, 10, 10, 0.2);
+      --error-border: #ef4444;
+      --error-text: #f87171;
+    }
+
+    /* === EYE-CARE THEME (Warm / Low Blue Light) === */
+    [data-theme="eye-care"] {
+      --bg-app: #1a1812;
+      --bg-surface: #1e1c14;
+      --bg-card: #2a2720;
+      --bg-input: rgba(42, 39, 32, 0.6);
+      --bg-toolbar: #1a1812;
+      --bg-slot: #141208;
+      --bg-overlay: rgba(20, 18, 8, 0.5);
+      --border-default: #3d3828;
+      --border-light: #4d4638;
+      --border-focus: rgba(202, 168, 80, 0.5);
+      --text-primary: #e8e0cc;
+      --text-secondary: #b5a98a;
+      --text-tertiary: #8a7e65;
+      --text-placeholder: #6b6048;
+      --accent: #c8a84e;
+      --accent-hover: #dabb60;
+      --accent-glow: rgba(200, 168, 78, 0.25);
+      --accent-shadow: rgb(120, 90, 30);
+      --cyan-accent: #c8a84e;
+      --cyan-dim: rgba(200, 168, 78, 0.4);
+      --scrollbar-track: #1a1812;
+      --scrollbar-thumb: #4d4638;
+      --scrollbar-hover: #5e5645;
+      --grid-line: #3d3828;
+      --slot-shadow: rgba(0, 0, 0, 0.4);
+      --error-bg: rgba(80, 30, 10, 0.2);
+      --error-border: #d97706;
+      --error-text: #fbbf24;
+    }
+
+    /* === IVORY THEME (Light) === */
+    [data-theme="ivory"] {
+      --bg-app: #f5f0e8;
+      --bg-surface: #ede8df;
+      --bg-card: #ffffff;
+      --bg-input: rgba(255, 255, 255, 0.7);
+      --bg-toolbar: #faf6f0;
+      --bg-slot: #f0ebe3;
+      --bg-overlay: rgba(245, 240, 232, 0.6);
+      --border-default: #d6cfc2;
+      --border-light: #c4bba8;
+      --border-focus: rgba(180, 120, 30, 0.5);
+      --text-primary: #1c1917;
+      --text-secondary: #57534e;
+      --text-tertiary: #78716c;
+      --text-placeholder: #a8a29e;
+      --accent: #b45309;
+      --accent-hover: #d97706;
+      --accent-glow: rgba(180, 83, 9, 0.15);
+      --accent-shadow: rgb(194, 140, 80);
+      --cyan-accent: #0e7490;
+      --cyan-dim: rgba(14, 116, 144, 0.4);
+      --scrollbar-track: #f5f0e8;
+      --scrollbar-thumb: #c4bba8;
+      --scrollbar-hover: #a8a29e;
+      --grid-line: #d6cfc2;
+      --slot-shadow: rgba(0, 0, 0, 0.08);
+      --error-bg: rgba(220, 60, 60, 0.08);
+      --error-border: #dc2626;
+      --error-text: #dc2626;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-app);
+      color: var(--text-primary);
+      overflow-y: scroll;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Theme-aware scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+      border-left: 1px solid var(--border-default);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 2px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-hover);
+    }
+
+    /* Theme-aware slot */
+    .daw-slot {
+      background-color: var(--bg-slot);
+      box-shadow: inset 0 2px 4px 0 var(--slot-shadow);
+      border: 1px solid var(--border-default);
+    }
+
+    /* Theme-aware grid */
+    .bg-grid-pattern {
+      background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    }
+
+    /* ======= THEME OVERRIDES FOR TAILWIND UTILITY CLASSES ======= */
+    /* Main backgrounds */
+    [data-theme="eye-care"] .min-h-screen,
+    [data-theme="ivory"] .min-h-screen {
+      background-color: var(--bg-app) !important;
+      color: var(--text-primary) !important;
+    }
+
+    /* Toolbar */
+    [data-theme] header.h-14 {
+      background-color: var(--bg-toolbar) !important;
+      border-color: var(--border-default) !important;
+    }
+
+    /* Cards, panels, inputs */
+    [data-theme="eye-care"] .bg-zinc-950,
+    [data-theme="ivory"] .bg-zinc-950 {
+      background-color: var(--bg-surface) !important;
+    }
+
+    [data-theme="eye-care"] .bg-zinc-900,
+    [data-theme="ivory"] .bg-zinc-900 {
+      background-color: var(--bg-card) !important;
+    }
+
+    [data-theme="eye-care"] .bg-zinc-900\/50,
+    [data-theme="ivory"] .bg-zinc-900\/50 {
+      background-color: var(--bg-input) !important;
+    }
+
+    [data-theme="eye-care"] .bg-zinc-900\/70,
+    [data-theme="ivory"] .bg-zinc-900\/70 {
+      background-color: var(--bg-input) !important;
+    }
+
+    [data-theme="eye-care"] .bg-zinc-900\/10,
+    [data-theme="ivory"] .bg-zinc-900\/10 {
+      background-color: var(--bg-input) !important;
+    }
+
+    /* Borders */
+    [data-theme="eye-care"] .border-zinc-800,
+    [data-theme="ivory"] .border-zinc-800 {
+      border-color: var(--border-default) !important;
+    }
+
+    [data-theme="eye-care"] .border-zinc-700,
+    [data-theme="ivory"] .border-zinc-700 {
+      border-color: var(--border-light) !important;
+    }
+
+    /* Text colors */
+    [data-theme="eye-care"] .text-white,
+    [data-theme="ivory"] .text-white {
+      color: var(--text-primary) !important;
+    }
+
+    [data-theme="eye-care"] .text-zinc-100,
+    [data-theme="ivory"] .text-zinc-100 {
+      color: var(--text-primary) !important;
+    }
+
+    [data-theme="eye-care"] .text-zinc-300,
+    [data-theme="ivory"] .text-zinc-300 {
+      color: var(--text-secondary) !important;
+    }
+
+    [data-theme="eye-care"] .text-zinc-400,
+    [data-theme="ivory"] .text-zinc-400 {
+      color: var(--text-tertiary) !important;
+    }
+
+    [data-theme="eye-care"] .text-zinc-500,
+    [data-theme="ivory"] .text-zinc-500 {
+      color: var(--text-tertiary) !important;
+    }
+
+    [data-theme="eye-care"] .text-zinc-600,
+    [data-theme="ivory"] .text-zinc-600 {
+      color: var(--text-placeholder) !important;
+    }
+
+    [data-theme="eye-care"] .text-zinc-700,
+    [data-theme="ivory"] .text-zinc-700 {
+      color: var(--text-placeholder) !important;
+    }
+
+    /* Accent overrides */
+    [data-theme="eye-care"] .text-amber-500,
+    [data-theme="eye-care"] .text-amber-400 {
+      color: var(--accent-hover) !important;
+    }
+
+    [data-theme="eye-care"] .text-cyan-400,
+    [data-theme="eye-care"] .text-cyan-500 {
+      color: var(--cyan-accent) !important;
+    }
+
+    [data-theme="ivory"] .text-cyan-400,
+    [data-theme="ivory"] .text-cyan-500 {
+      color: var(--cyan-accent) !important;
+    }
+
+    /* Accent button */
+    [data-theme="eye-care"] .bg-amber-600 {
+      background-color: var(--accent) !important;
+    }
+
+    [data-theme="eye-care"] .bg-amber-600:hover {
+      background-color: var(--accent-hover) !important;
+    }
+
+    [data-theme="ivory"] .bg-amber-600 {
+      background-color: var(--accent) !important;
+    }
+
+    [data-theme="ivory"] .bg-amber-600:hover {
+      background-color: var(--accent-hover) !important;
+    }
+
+    /* Black backgrounds */
+    [data-theme="eye-care"] .bg-black,
+    [data-theme="eye-care"] .bg-black\/40 {
+      background-color: var(--bg-overlay) !important;
+    }
+
+    [data-theme="ivory"] .bg-black,
+    [data-theme="ivory"] .bg-black\/40 {
+      background-color: var(--bg-overlay) !important;
+    }
+
+    /* Auth screen */
+    [data-theme="eye-care"] .bg-black.bg-grid-pattern,
+    [data-theme="ivory"] .bg-black.bg-grid-pattern {
+      background-color: var(--bg-app) !important;
+    }
+
+    /* Dashed borders */
+    [data-theme="eye-care"] .border-dashed,
+    [data-theme="ivory"] .border-dashed {
+      border-color: var(--border-default) !important;
+    }
+
+    /* Error */
+    [data-theme] .border-red-500 {
+      border-color: var(--error-border) !important;
+    }
+
+    [data-theme] .text-red-400 {
+      color: var(--error-text) !important;
+    }
+
+    /* Smooth transitions for theme switching */
+    [data-theme] *,
+    [data-theme] *::before,
+    [data-theme] *::after {
+      transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease;
+    }
+  </style>
+  <!-- Note: importmap removed — Vite handles module resolution via bundling -->
+
+  <script type="module" crossorigin src="/assets/index-BvEHlD8T.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
+</html>
