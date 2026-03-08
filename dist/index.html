@@ -170,9 +170,24 @@
       border-color: var(--border-default) !important;
     }
 
+    /* Custom patterns */
+    .scanline-pattern {
+      background-image: linear-gradient(rgba(18, 18, 18, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      background-size: 100% 4px, 3px 100%;
+    }
+
+    [data-theme="ivory"] .scanline-pattern,
+    [data-theme="eye-care"] .scanline-pattern {
+      background-image: linear-gradient(rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.05) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)) !important;
+    }
+
     /* Cards, panels, inputs */
     [data-theme="eye-care"] .bg-zinc-950,
-    [data-theme="ivory"] .bg-zinc-950 {
+    [data-theme="ivory"] .bg-zinc-950,
+    [data-theme="eye-care"] .bg-zinc-950\/80,
+    [data-theme="ivory"] .bg-zinc-950\/80,
+    [data-theme="eye-care"] .bg-zinc-950\/50,
+    [data-theme="ivory"] .bg-zinc-950\/50 {
       background-color: var(--bg-surface) !important;
     }
 
@@ -181,8 +196,14 @@
       background-color: var(--bg-card) !important;
     }
 
+    [data-theme="eye-care"] .bg-zinc-900\/80,
+    [data-theme="ivory"] .bg-zinc-900\/80,
     [data-theme="eye-care"] .bg-zinc-900\/50,
-    [data-theme="ivory"] .bg-zinc-900\/50 {
+    [data-theme="ivory"] .bg-zinc-900\/50,
+    [data-theme="eye-care"] .bg-zinc-900\/40,
+    [data-theme="ivory"] .bg-zinc-900\/40,
+    [data-theme="eye-care"] .bg-zinc-900\/30,
+    [data-theme="ivory"] .bg-zinc-900\/30 {
       background-color: var(--bg-input) !important;
     }
 
@@ -418,7 +439,7 @@
   </style>
   <!-- Note: importmap removed — Vite handles module resolution via bundling -->
 
-  <script type="module" crossorigin src="/assets/index-BztRrV6T.js"></script>
+  <script type="module" crossorigin src="/assets/index-4yRQaJ_b.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-DeZ1T0XO.css">
 </head>
 
